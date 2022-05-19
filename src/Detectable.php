@@ -147,16 +147,16 @@ class Detectable
      * otherwise it will be output to STDOUT.
      *
      * @param string|null $outFileName file name to store. If null, will be printed to output
+     * @param int|null $margin to create a % of margin around the face
      * @return void
      * @throws Sensi\Facial\NoFaceException
      */
-    public function cropFaceToJpeg(string $outFileName = null) : void
-    {
+    public function cropFaceToJpeg(string $outFileName = null, $margin = 0 ) : void {
         if (empty($this->face)) {
             throw new NoFaceException('No face detected');
         }
-        $canvas = imagecreatetruecolor($this->face['w'], $this->face['w']);
-        imagecopy($canvas, $this->canvas, 0, 0, $this->face['x'], $this->face['y'], $this->face['w'], $this->face['w']);
+        $canvas = imagecreatetruecolor( $this->face['w'] + ( $this->face[ 'w' ] * 2 * $margin ), $this->face['w'] + ( $this->face[ 'w' ] * 2 * $margin ) );
+        imagecopy($canvas, $this->canvas, 0, 0, $this->face['x'] - ( $this->face['w'] * $margin ), $this->face['y'] - ( $this->face[ 'y' ] * $margin ), $this->face[ 'w' ] + ( $this->face[ 'w' ] * 2 * $margin ), $this->face['w'] + ( $this->face[ 'w' ] * 2 * $margin ) );
         if ($outFileName === null) {
             header('Content-type: image/jpeg');
         }
